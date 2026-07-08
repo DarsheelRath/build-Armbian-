@@ -1,0 +1,21 @@
+name: "Build Custom Armbian Image"
+
+on:
+  workflow_dispatch: # Allows you to manually click a button to start the build
+
+jobs:
+  build-armbian:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Armbian Image
+        uses: armbian/build@main
+        with:
+          armbian_token: "${{ secrets.GITHUB_TOKEN }}"
+          armbian_target: "build"       # "build" outputs a full SD card image
+          armbian_board: "orangepizero2w"   # Change to your target board ID
+          armbian_release: "resolute"      # e.g., noble (Ubuntu 24.04), jammy, bookworm
+          armbian_branch: "current"     # current (LTS kernel) or edge (rolling kernel)
+          armbian_extra_args: "BUILD_DESKTOP=no BUILD_MINIMAL=yes"
