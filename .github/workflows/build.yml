@@ -31,8 +31,10 @@ jobs:
             BRANCH=edge \
             BUILD_DESKTOP=no \
             BUILD_MINIMAL=yes \
-            COMPRESS_OUTPUT=xz
-
+            COMPRESS_OUTPUT=xz \
+            KERNEL_ONLY="" \
+            KERNEL_CONFIGURE=""
+            
       - name: Upload Finished Image Artifact
         uses: actions/upload-artifact@v4
         with:
