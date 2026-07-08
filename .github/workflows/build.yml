@@ -25,14 +25,12 @@ jobs:
 
       - name: Run Build in Docker Container
         run: |
-          ./compile.sh \
+          ./compile.sh build \
             BOARD=orangepizero2w \
             RELEASE=resolute \
             BRANCH=edge \
             BUILD_DESKTOP=no \
             BUILD_MINIMAL=yes \
-            KERNEL_ONLY=no \
-            KERNEL_CONFIGURE=no \
             COMPRESS_OUTPUT=xz
 
       - name: Upload Finished Image Artifact
