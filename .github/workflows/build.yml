@@ -10,7 +10,6 @@ jobs:
       - name: Checkout Your Fork
         uses: actions/checkout@v4
 
-      # CRITICAL FIX: Registers and unlocks the kernel cross-compilation layer
       - name: Set up QEMU User Static Emulation
         run: |
           sudo apt-get update
@@ -29,16 +28,15 @@ jobs:
           ./compile.sh \
             BOARD=orangepizero2w \
             RELEASE=resolute \
-            BRANCH=current \
+            BRANCH=edge \
             BUILD_DESKTOP=no \
             BUILD_MINIMAL=yes \
             KERNEL_ONLY=no \
             KERNEL_CONFIGURE=no \
             COMPRESS_OUTPUT=xz
 
-       Cavil-Step: Upload Finished Image Artifact
       - name: Upload Finished Image Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: orange-pi-zero-2w-resolute-image
+          name: orange-pi-zero-2w-resolute-edge-image
           path: output/images/*.xz
