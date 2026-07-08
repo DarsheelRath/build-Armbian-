@@ -3,7 +3,6 @@ name: "Build Custom Orange Pi Zero 2W Image"
 on:
   workflow_dispatch:
 
-# Grant necessary Git repository access permissions
 permissions:
   contents: write
   actions: write
@@ -12,9 +11,6 @@ jobs:
   build-armbian:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Build Armbian Image
         uses: armbian/build@main
         with:
