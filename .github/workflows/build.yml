@@ -7,20 +7,21 @@ jobs:
   build-armbian:
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Bring in your forked files (including armbian-firstrun-config.template)
       - name: Checkout Your Fork
         uses: actions/checkout@v4
 
-      - name: Download Armbian Compile Scripts
+      # Step 2: Inject your template configuration directly into userpatches/
+      - name: Stage Custom Configurations
         run: |
-          git clone --depth 1 https://github.com armbian-core
-          # Move your configuration template into the build patches environment
+          mkdir -p userpatches
           if [ -f armbian-firstrun-config.template ]; then
-            cp armbian-firstrun-config.template armbian-core/userpatches/
+            cp armbian-firstrun-config.template userpatches/
           fi
 
+      # Step 3: Trigger the compiler tool locally without downloading a duplicate repo
       - name: Run Build in Docker Container
         run: |
-          cd armbian-core
           ./compile.sh \
             BOARD=orangepizero2w \
             RELEASE=resolute \
@@ -31,8 +32,9 @@ jobs:
             KERNEL_CONFIGURE=no \
             COMPRESS_OUTPUT=xz
 
+      # Step 4: Save the final compiled image
       - name: Upload Finished Image Artifact
         uses: actions/upload-artifact@v4
         with:
           name: orange-pi-zero-2w-resolute-image
-          path: armbian-core/output/images/*.xz
+          path: output/images/*.xz
