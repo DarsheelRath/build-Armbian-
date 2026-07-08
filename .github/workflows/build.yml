@@ -1,41 +1,17 @@
-name: "Build Custom Orange Pi Zero 2W Image"
-
+name: Build Armbian Image
 on:
   workflow_dispatch:
 
 jobs:
-  build-armbian:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Your Fork
-        uses: actions/checkout@v4
-
-      - name: Set up QEMU User Static Emulation
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y qemu-user-static binfmt-support
-          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-
-      - name: Stage Custom Configurations
-        run: |
-          mkdir -p userpatches
-          if [ -f armbian-firstrun-config.template ]; then
-            cp armbian-firstrun-config.template userpatches/
-          fi
-
-      # Pure Modernized Armbian CLI Command Syntax
-      - name: Run Build in Docker Container
-        run: |
-          ./compile.sh build \
-            --board=orangepizero2w \
-            --release=resolute \
-            --branch=edge \
-            --desktop=no \
-            --minimal=yes \
-            --compress=xz
-            
-      - name: Upload Finished Image Artifact
-        uses: actions/upload-artifact@v4
+      - uses: armbian/build@main
         with:
-          name: orange-pi-zero-2w-resolute-edge-image
-          path: output/images/*.xz
+          armbian_token: ${{ secrets.GITHUB_TOKEN }}
+          armbian_board: "orangepizero2w"      # Custom target board
+          armbian_release: "resolute"          # Custom OS target
+          armbian_branch: "edge"               # Experimental rolling kernel
+          armbian_target: "build"
+          armbian_ui: "minimal"                # Enforces server/minimal CLI
+          armbian_runner_clean: "yes"          # Purges workspace to save space
