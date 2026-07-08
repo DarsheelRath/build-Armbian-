@@ -7,11 +7,16 @@ jobs:
   build-armbian:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Bring in your forked files (including armbian-firstrun-config.template)
       - name: Checkout Your Fork
         uses: actions/checkout@v4
 
-      # Step 2: Inject your template configuration directly into userpatches/
+      # CRITICAL FIX: Registers and unlocks the kernel cross-compilation layer
+      - name: Set up QEMU User Static Emulation
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static binfmt-support
+          docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
       - name: Stage Custom Configurations
         run: |
           mkdir -p userpatches
@@ -19,7 +24,6 @@ jobs:
             cp armbian-firstrun-config.template userpatches/
           fi
 
-      # Step 3: Trigger the compiler tool locally without downloading a duplicate repo
       - name: Run Build in Docker Container
         run: |
           ./compile.sh \
@@ -32,7 +36,7 @@ jobs:
             KERNEL_CONFIGURE=no \
             COMPRESS_OUTPUT=xz
 
-      # Step 4: Save the final compiled image
+       Cavil-Step: Upload Finished Image Artifact
       - name: Upload Finished Image Artifact
         uses: actions/upload-artifact@v4
         with:
