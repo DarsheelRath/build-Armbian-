@@ -23,6 +23,7 @@ jobs:
             cp armbian-firstrun-config.template userpatches/
           fi
 
+      # Modern CLI execution syntax per updated developer guidelines
       - name: Run Build in Docker Container
         run: |
           ./compile.sh build \
@@ -31,10 +32,8 @@ jobs:
             BRANCH=edge \
             BUILD_DESKTOP=no \
             BUILD_MINIMAL=yes \
-            COMPRESS_OUTPUT=xz \
-            KERNEL_ONLY="" \
-            KERNEL_CONFIGURE=""
-            
+            COMPRESS_OUTPUT=xz
+
       - name: Upload Finished Image Artifact
         uses: actions/upload-artifact@v4
         with:
