@@ -3,20 +3,36 @@ name: "Build Custom Orange Pi Zero 2W Image"
 on:
   workflow_dispatch:
 
-permissions:
-  contents: write
-  actions: write
-
 jobs:
   build-armbian:
     runs-on: ubuntu-latest
     steps:
-      - name: Build Armbian Image
-        uses: armbian/build@main
+      - name: Checkout Your Fork
+        uses: actions/checkout@v4
+
+      - name: Download Armbian Compile Scripts
+        run: |
+          git clone --depth 1 https://github.com armbian-core
+          # Move your configuration template into the build patches environment
+          if [ -f armbian-firstrun-config.template ]; then
+            cp armbian-firstrun-config.template armbian-core/userpatches/
+          fi
+
+      - name: Run Build in Docker Container
+        run: |
+          cd armbian-core
+          ./compile.sh \
+            BOARD=orangepizero2w \
+            RELEASE=resolute \
+            BRANCH=current \
+            BUILD_DESKTOP=no \
+            BUILD_MINIMAL=yes \
+            KERNEL_ONLY=no \
+            KERNEL_CONFIGURE=no \
+            COMPRESS_OUTPUT=xz
+
+      - name: Upload Finished Image Artifact
+        uses: actions/upload-artifact@v4
         with:
-          armbian_token: "${{ secrets.GITHUB_TOKEN }}"
-          armbian_target: "build"
-          armbian_board: "orangepizero2w"
-          armbian_release: "resolute"
-          armbian_branch: "edge"
-          armbian_ui: "minimal"
+          name: orange-pi-zero-2w-resolute-image
+          path: armbian-core/output/images/*.xz
