@@ -1,7 +1,7 @@
-name: "Build Custom Armbian Image"
+name: "Build Custom Orange Pi Zero 2W Image"
 
 on:
-  workflow_dispatch: # Allows you to manually click a button to start the build
+  workflow_dispatch:
 
 jobs:
   build-armbian:
@@ -14,8 +14,8 @@ jobs:
         uses: armbian/build@main
         with:
           armbian_token: "${{ secrets.GITHUB_TOKEN }}"
-          armbian_target: "build"       # "build" outputs a full SD card image
-          armbian_board: "orangepizero2w"   # Change to your target board ID
-          armbian_release: "resolute"      # e.g., noble (Ubuntu 24.04), jammy, bookworm
-          armbian_branch: "current"     # current (LTS kernel) or edge (rolling kernel)
-          armbian_extra_args: "BUILD_DESKTOP=no BUILD_MINIMAL=yes"
+          armbian_target: "build"
+          armbian_board: "orangepizero2w"
+          armbian_release: "resolute"  # Builds Ubuntu 26.04 LTS Resolute Base
+          armbian_branch: "edge"
+          armbian_ui: "minimal"
