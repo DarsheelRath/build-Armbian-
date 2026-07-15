@@ -1,16 +1,13 @@
 # Enable SSH root login immediately
 FR_net_ssh_disable_root_login=not_set
-
 # Automatically connect to your local Wi-Fi network
-FR_net_wifi_enabled=yes
-FR_net_wifi_ssid="Dishu"
-FR_net_wifi_key="maple@13"
-
+FR_net_wifi_enabled=1
+FR_net_wifi_ssid=Dishu
+FR_net_wifi_key=maple@13
 # Optional: Set a static IP or leave blank for DHCP
 FR_net_wifi_ip=""
 FR_net_wifi_mask=""
 FR_net_wifi_gateway=""
-
 # Change your default time zone if needed
 FR_timezone="America/Chicago"
-PRESET_ROOT_PASSWORD="darsheelrath"
+PRESET_ROOT_PASSWORD=darsheelrath
